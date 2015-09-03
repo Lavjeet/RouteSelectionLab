@@ -56,7 +56,7 @@ public class Driver {
         final List< Path< Node, Double >> allPermutations = ppg.findAllPermutations( true, false );
 
         final List< Path< Node, Double >> shortestPaths = getShortestPathsFromAllPermutations( allPermutations );
-        //printShortestPaths( shortestPaths );
+        printShortestPaths( shortestPaths );
 
     }
 
@@ -72,26 +72,42 @@ public class Driver {
             final List< Path< Node, Double >> allPermutations ) {
         Set< Node > employeesNodes = new HashSet<>();
         List< Path< Node, Double >> shortestRoutes = new ArrayList<>();
+        for ( final Path< Node, Double > route : allPermutations ) {
+            if (Collections.disjoint( employeesNodes, route.getNodes() )) {
+                employeesNodes.addAll( route.getNodes() );
+                shortestRoutes.add( route );
+            }
+        }
+        
+        /*
+        Set< Node > employeesNodes = new HashSet<>();
+        List< Path< Node, Double >> shortestRoutes = new ArrayList<>();
         final Map< String, List< Path<Node, Double> >> shortestRoutesCombination = new HashMap< String, List<Path<Node,Double>> >();
+        double totalDistance = Long.MAX_VALUE;
         
         for ( int i = 0; i <= allPermutations.size(); i++ ) {
             employeesNodes = new HashSet<>();
-            shortestRoutes = new ArrayList<>();
-            
+            List< Path< Node, Double >> newShortestRoutes = new ArrayList<>();
+            double newTotalDistance = 0;
             for ( final Path< Node, Double > route : allPermutations ) {
                 if (Collections.disjoint( employeesNodes, route.getNodes() )) {
                     employeesNodes.addAll( route.getNodes() );
-                    shortestRoutes.add( route );
+                    newShortestRoutes.add( route );
+                    newTotalDistance += route.getDistance();
+                    if(route.getDistance() == 6.5) {
+                        System.out.println("this one");
+                    }
                 }
             }
-            //shortestRoutesCombination.put(""+i+1, shortestRoutes);
-            System.out.print(i+1+ " : "+allPermutations.size());
-            System.out.println(shortestRoutes);
-            if( i == allPermutations.size() ) {
-                System.out.println("reached");
+            if(newTotalDistance <= totalDistance) {
+                System.out.println(totalDistance + " --> " + newTotalDistance );
+                totalDistance = newTotalDistance;
+                shortestRoutes = newShortestRoutes;
             }
+            //System.out.println(newTotalDistance);
+            //shortestRoutesCombination.put(""+i+1, shortestRoutes);
             Collections.rotate( allPermutations, 1 );
-        }
+        }*/
         return shortestRoutes;
     }
 
